@@ -2,7 +2,7 @@
 
 # requires
 cp = require 'child_process'
-cssCompiler = require '../lib/cssCompiler.coffee'
+coffeeCss = require 'coffee-css'
 fs = require 'fs'
 util = require 'util'
 
@@ -18,13 +18,23 @@ findMappings =
         cp.exec "coffee -c \"#{file}\"", (err, stdout, stderr) ->
             newFile = file.replace /\.coffee$/i, '.js'
             util.log 'Written ' + newFile
+    
     'find . -iname "*.css.coffee"': (file) ->
-        cssCompiler.compileFile file, cssMappings
+        coffeeCss.compileFile
+            afterWriteFile: (fileName, newFileName) ->
+                util.log 'Written ' + newFileName
+            errorWriteFile: (err, fileName, newFileName) ->
+                util.log 'Error compiling ' + fileName + ': ' + err.message
+            fileName: file
+            mappings: cssMappings
+
     'find . -iname "*.js" ! -iname "*.min.js"': (file) ->
         cp.exec "uglifyjs -nc \"#{file}\"", (err, stdout, stderr) ->
             newFile = file.replace /\.js$/i, '.min.js'
             fs.writeFile newFile, stdout, (err) ->
                 util.log 'Written ' + newFile
+
+startWithAll = false
 
 watchedFiles = {}
 
@@ -41,9 +51,11 @@ compileIfNeeded = (file, compileFunction) ->
     fs.stat file, (err, stats) ->
         oldModifiedTime = watchedFiles[file]
         newModifiedTime = new Date(stats.mtime)
+        oldModifiedTime = newModifiedTime - 1 if oldModifiedTime == undefined && startWithAll
         watchedFiles[file] = newModifiedTime
         compileFunction file if newModifiedTime > oldModifiedTime
 
 # main
 util.log 'Watching ' + process.cwd()
+startWithAll = true if process.argv[2]?.toLowerCase() == 'all'
 setInterval poller, 1000
