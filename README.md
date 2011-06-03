@@ -1,5 +1,5 @@
 # coffee-world
-Watches a folder to compile CoffeeScript into CSS, HTML, JS (uglify), etc.
+Watches a folder to compile CoffeeScript into CSS, HTML, JS (+ uglify), etc.
 
 # Install
     npm install
