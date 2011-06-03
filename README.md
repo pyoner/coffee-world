@@ -1,5 +1,5 @@
 # coffee-world
-Watches a folder to compile CoffeeScript into CSS, HTML & JS (+ uglify)
+Watches the current folder to compile CoffeeScript into CSS, HTML & JS (+ uglify)
 
 # Install
     sudo npm install coffee-world
@@ -9,7 +9,7 @@ Watches a folder to compile CoffeeScript into CSS, HTML & JS (+ uglify)
     coffee-world all   # to compile all files on startup
 
 * `*.css.coffee` will be compiled with coffee-css into `*.css`.
-* `*.html.coffee` will be compiled with Coffeekup into `*.html`.
+* `*.html.coffee` will be compiled with coffeekup into `*.html`.
 * All other `*.coffee` files will be compiled into `*.js` with CoffeeScript.
 * `*.js` will be uglified into `*.min.js`.
 

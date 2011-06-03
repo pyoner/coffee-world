@@ -8,12 +8,6 @@ fs = require 'fs'
 util = require 'util'
 
 # globals
-cssMappings =
-    boxShadowAll: (value) ->
-        WebkitBoxShadow: value
-        MozBoxShadow: value
-        boxShadow: value
-
 findMappings =
     'find . -iname "*.coffee" ! -iname "*.css.coffee" ! -iname "*.html.coffee"': (file) ->
         cp.exec "coffee -c \"#{file}\"", (err, stdout, stderr) ->
@@ -30,7 +24,6 @@ findMappings =
             errorWriteFile: (err, fileName, newFileName) ->
                 util.log 'Error compiling ' + fileName + ': ' + err.message
             fileName: file
-            mappings: cssMappings
 
     'find . -iname "*.html.coffee"': (file) ->
         fs.readFile file, (err, data) ->

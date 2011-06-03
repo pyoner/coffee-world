@@ -1,8 +1,8 @@
 {
   "name": "coffee-world",
-  "description": "Watches a folder to compile CoffeeScript into CSS, HTML & JS (+ uglify)",
+  "description": "Watches the current folder to compile CoffeeScript into CSS, HTML & JS (+ uglify)",
   "author": "khoomeister",
-  "version": "0.0.5",
+  "version": "0.0.6",
   "licenses": [{
     "type": "MIT",
     "url": "http://opensource.org/licenses/mit-license.php"
@@ -11,7 +11,7 @@
     "node": ">=0.4.5"
   },
   "dependencies": {
-    "coffee-css": ">=0.0.1",
+    "coffee-css": ">=0.0.2",
     "coffee-script": ">=1.0.0",
     "coffeekup": ">=0.2.3",
     "uglify-js": ">=1.0.2"
