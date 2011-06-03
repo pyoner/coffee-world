@@ -4,6 +4,7 @@
 cp = require 'child_process'
 cssCompiler = require '../lib/cssCompiler.coffee'
 fs = require 'fs'
+util = require 'util'
 
 # globals
 cssMappings =
@@ -13,31 +14,36 @@ cssMappings =
         boxShadow: value
 
 findMappings =
-    'find . -iname *.css.coffee': (file) ->
+    'find . -iname "*.coffee" ! -iname "*.css.coffee"': (file) ->
+        cp.exec "coffee -c \"#{file}\"", (err, stdout, stderr) ->
+            newFile = file.replace /\.coffee$/i, '.js'
+            util.log 'Written ' + newFile
+    'find . -iname "*.css.coffee"': (file) ->
         cssCompiler.compileFile file, cssMappings
-    'find . -iname *.js ! -iname *.min.js': (file) ->
+    'find . -iname "*.js" ! -iname "*.min.js"': (file) ->
         cp.exec "uglifyjs -nc \"#{file}\"", (err, stdout, stderr) ->
             newFile = file.replace /\.js$/i, '.min.js'
             fs.writeFile newFile, stdout, (err) ->
-                console.log 'Written ' + newFile
+                util.log 'Written ' + newFile
 
 watchedFiles = {}
 
 # functions
 poller = () ->
-    for findCommand, compileFunction of findMappings
-        cp.exec findCommand, (error, stdout, stderr) ->
-            fileList = stdout.split('\n')
-            for file in fileList
-                compileIfNeeded file, compileFunction if file != ''
+    findFiles findCommand, compileFunction for findCommand, compileFunction of findMappings
+
+findFiles = (findCommand, compileFunction) ->
+    cp.exec findCommand, (error, stdout, stderr) ->
+        fileList = stdout.split('\n')
+        compileIfNeeded file, compileFunction for file in fileList when file != ''
 
 compileIfNeeded = (file, compileFunction) ->
-	fs.stat file, (err, stats) ->
-		oldModifiedTime = watchedFiles[file]
-		newModifiedTime = new Date(stats.mtime)
-		watchedFiles[file] = newModifiedTime
-		if newModifiedTime > oldModifiedTime
-		    compileFunction file
+    fs.stat file, (err, stats) ->
+        oldModifiedTime = watchedFiles[file]
+        newModifiedTime = new Date(stats.mtime)
+        watchedFiles[file] = newModifiedTime
+        compileFunction file if newModifiedTime > oldModifiedTime
 
 # main
+util.log 'Watching ' + process.cwd()
 setInterval poller, 1000
