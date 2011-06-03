@@ -3,6 +3,7 @@
 # requires
 cp = require 'child_process'
 coffeeCss = require 'coffee-css'
+coffeekup = require 'coffeekup'
 fs = require 'fs'
 util = require 'util'
 
@@ -14,10 +15,13 @@ cssMappings =
         boxShadow: value
 
 findMappings =
-    'find . -iname "*.coffee" ! -iname "*.css.coffee"': (file) ->
+    'find . -iname "*.coffee" ! -iname "*.css.coffee" ! -iname "*.html.coffee"': (file) ->
         cp.exec "coffee -c \"#{file}\"", (err, stdout, stderr) ->
-            newFile = file.replace /\.coffee$/i, '.js'
-            util.log 'Written ' + newFile
+            if err
+                util.log 'Error compiling ' + file + ': ' + err
+            else
+                newFile = file.replace /\.coffee$/i, '.js'
+                util.log 'Written ' + newFile
     
     'find . -iname "*.css.coffee"': (file) ->
         coffeeCss.compileFile
@@ -28,11 +32,23 @@ findMappings =
             fileName: file
             mappings: cssMappings
 
+    'find . -iname "*.html.coffee"': (file) ->
+        fs.readFile file, (err, data) ->
+            newFile = file.replace /\.html.coffee$/i, '.html'
+            try
+                fs.writeFile newFile, coffeekup.render(data.toString()), (err) ->
+                    util.log 'Written ' + newFile
+            catch err
+                util.log 'Error compiling ' + file + ': ' + err.message
+
     'find . -iname "*.js" ! -iname "*.min.js"': (file) ->
         cp.exec "uglifyjs -nc \"#{file}\"", (err, stdout, stderr) ->
-            newFile = file.replace /\.js$/i, '.min.js'
-            fs.writeFile newFile, stdout, (err) ->
-                util.log 'Written ' + newFile
+            if err
+                util.log 'Error compiling ' + file + ': ' + err
+            else
+                newFile = file.replace /\.js$/i, '.min.js'
+                fs.writeFile newFile, stdout, (err) ->
+                    util.log 'Written ' + newFile
 
 startWithAll = false
 
