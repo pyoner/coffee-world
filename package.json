@@ -1,0 +1,19 @@
+{
+  "name": "coffee-world",
+  "description": "Watches a folder to compile CoffeeScript into CSS, HTML, etc.",
+  "author": "khoomeister",
+  "version": "0.0.1",
+  "licenses": [{
+    "type": "MIT",
+    "url": "http://opensource.org/licenses/mit-license.php"
+  }],
+  "engines": {
+    "node": ">=0.4.5"
+  },
+  "dependencies": {
+    "coffee-script": ">=1.0.0"
+  },
+  "bin": {
+    "coffee-world": "./bin/coffee-world"
+  }
+}

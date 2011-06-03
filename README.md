@@ -1,0 +1,14 @@
+# coffee-world
+Watches a folder to compile CoffeeScript into CSS, HTML, etc.
+
+Note: Only works with CSS at the moment
+
+# Install
+Todo
+
+# Usage
+Todo
+
+# Thanks
+* http://jashkenas.github.com/coffee-script/
+* https://github.com/aeosynth/ccss
