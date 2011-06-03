@@ -4,27 +4,26 @@ fs = require 'fs'
 vm = require 'vm'
 
 # public functions
-exports.compileFile = (file) ->
+exports.compileFile = (file, mappings) ->
     fs.readFile file, (err, data) ->
-        js = coffee.compile(data.toString().trim())
-        sandbox =
-            exports: {}
-            require: require
-        vm.runInNewContext js, sandbox
-        css = exports.compileObject sandbox.exports.css,
-            boxShadowAll: (value) ->
-                WebkitBoxShadow: value
-                MozBoxShadow: value
-                boxShadow: value
-        newFile = file.replace /\.css\.coffee$/i, '.css'
-        fs.writeFile newFile, css, () ->
-            console.log 'Written ' + newFile
+        try
+            js = coffee.compile(data.toString().trim())
+            sandbox =
+                exports: {}
+                require: require
+            vm.runInNewContext js, sandbox
+            css = exports.compileObject sandbox.exports.css, mappings
+            newFile = file.replace /\.css\.coffee$/i, '.css'
+            fs.writeFile newFile, css, () ->
+                console.log 'Written ' + newFile
+        catch err
+            console.log 'Error compiling ' + file + ': ' + err.message
 
-exports.compileObject = (css, mappings) ->
+exports.compileObject = (cssObject, mappings) ->
     outputList = []
 
-    compileCssList = (css) ->
-        for selector, declarations of css
+    compileCssList = (cssObject) ->
+        for selector, declarations of cssObject
             declarationText = []
             nestedSelectors = {}
 
@@ -43,5 +42,5 @@ exports.compileObject = (css, mappings) ->
             outputList.push "#{selector} {\n#{declarationText.join('\n')}\n}"
             compileCssList nestedSelectors
 
-    compileCssList css
+    compileCssList cssObject
     outputList.join '\n'

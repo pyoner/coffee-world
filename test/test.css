@@ -1,3 +1,9 @@
+a {
+  text-decoration: none;
+}
+a:hover {
+  text-decoration: underline;
+}
 form {
   border-radius: 5px;
   -webkit-box-shadow: 5px;
@@ -20,5 +26,5 @@ img {
   opacity: 1;
 }
 img:hover {
-  opacity: 0.1;
+  opacity: 0.123;
 }

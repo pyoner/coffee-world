@@ -1,4 +1,8 @@
 exports.css =
+    'a':
+        textDecoration: 'none'
+    'a:hover':
+        textDecoration: 'underline'
     'form':
         borderRadius: '5px',
         boxShadowAll: '5px'
@@ -16,4 +20,4 @@ exports.css =
     'img':
         opacity: 1
     'img:hover':
-        opacity: 0.1
+        opacity: 0.8

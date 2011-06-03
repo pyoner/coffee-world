@@ -1,13 +1,11 @@
 # coffee-world
-Watches a folder to compile CoffeeScript into CSS, HTML, etc.
-
-Note: Only works with CSS at the moment
+Watches a folder to compile CoffeeScript into CSS, HTML, JS (uglifying), etc.
 
 # Install
-Todo
+    npm install
 
 # Usage
-Todo
+    coffee-world
 
 # Thanks
 * http://jashkenas.github.com/coffee-script/
