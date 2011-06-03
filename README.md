@@ -2,7 +2,7 @@
 Watches a folder to compile CoffeeScript into CSS, HTML & JS (+ uglify)
 
 # Install
-    npm install
+    sudo npm install coffee-world
 
 # Usage
     coffee-world
