@@ -5,8 +5,10 @@ Watches the current folder to compile CoffeeScript into CSS, HTML & JS
     sudo npm install coffee-world
 
 # Usage
-    coffee-world
-    coffee-world all   # to compile all files on startup
+    coffee-world                # watches current folder
+    coffee-world <path>         # watches <path>
+    coffee-world --all          # compiles all files on startup
+    coffee-world <path> --all
 
 * `*.css.coffee` will be compiled with coffee-css into `*.css`.
 * `*.html.coffee` will be compiled with coffeekup into `*.html`.
