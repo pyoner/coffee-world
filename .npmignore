@@ -1,4 +1,6 @@
 .git*
 .idea/
+src/
 test/
+Cakefile
 README.md
